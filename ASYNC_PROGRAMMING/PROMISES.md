@@ -140,3 +140,28 @@ async function logIngredients() {
 }
 
 **Note:** async/await has the same concurrency semantics as normal promise chains. await within one async function does not stop the entire program, only the parts that depend on its value, so other async jobs can still run while the await is pending.
+
+### Error Handling
+
+Promises solve a fundamental flaw with the callback pyramid of doom, by catching all errors, even thrown exceptions and programming errors. This is essential for functional composition of asynchronous operations. All errors are now handled by the catch() method at the end of the chain, and you should almost never need to use try/catch without using async/await.
+
+async function foo() {
+  try {
+    const result = await doSomething();
+    const newResult = await doSomethingElse(result);
+    const finalResult = await doThirdThing(newResult);
+    console.log(`Got the final result: ${finalResult}`);
+  } catch (error) {
+    failureCallback(error);
+  }
+}
+
+#### Nesting
+
+### Composition
+
+### Cancellation
+
+### Creating a Promise around an old callback API
+
+### Timing
