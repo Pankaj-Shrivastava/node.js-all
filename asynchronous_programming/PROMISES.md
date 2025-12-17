@@ -163,6 +163,75 @@ Promises solve a fundamental flaw with the callback pyramid of doom, by catching
 
 #### Nesting
 
+Nesting is a control structure to limit the scope of catch statements. Specifically, a nested catch only catches failures in its scope and below, not errors higher up in the chain outside the nested scope. When used correctly, this gives greater precision in error recovery.
+
+    doSomethingCritical()
+      .then((result) =>
+        doSomethingOptional(result)
+          .then((optionalResult) => doSomethingExtraNice(optionalResult))
+          .catch((e) => {}),
+      ) // Ignore if optional stuff fails; proceed.
+      .then(() => moreCriticalStuff())
+      .catch((e) => console.error(`Critical failure: ${e.message}`));
+
+In async/await, this code looks like:
+
+    async function main() {
+      try {
+        const result = await doSomethingCritical();
+        try {
+          const optionalResult = await doSomethingOptional(result);
+          await doSomethingExtraNice(optionalResult);
+        } catch (e) {
+          // Ignore failures in optional steps and proceed.
+        }
+        await moreCriticalStuff();
+      } catch (e) {
+        console.error(`Critical failure: ${e.message}`);
+      }
+    }
+
+#### Chaining after a catch
+
+    doSomething()
+      .then(() => {
+        throw new Error("Something failed");
+
+        console.log("Do this");
+      })
+      .catch(() => {
+        console.error("Do that");
+      })
+      .then(() => {
+        console.log("Do this, no matter what happened before");
+      });
+
+This will output the following text:
+
+    Do that
+    Do this, no matter what happened before
+
+In async/await, this code looks like:
+
+    async function main() {
+      try {
+        await doSomething();
+        throw new Error("Something failed");
+        console.log("Do this");
+      } catch (e) {
+        console.log("Do that");
+      }
+      console.log("Do this, no matter what happened before");
+    }
+
+#### Promise rejection events
+
+In Node.js, we can capture rejections by adding a handler for the Node.js **unhandledRejection** event like this:
+
+    process.on("unhandledRejection", (reason, promise) => {
+      // Add code here to examine the "promise" and "reason" values
+    });
+
 ---
 
 ### Composition
