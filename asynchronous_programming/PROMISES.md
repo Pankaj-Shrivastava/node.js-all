@@ -9,19 +9,19 @@ For Example:
 
 NORMAL JS FILE
 
-function successCallback(result) {
-console.log(`Audio file is ready at URL: ${result}`);
-}
+    function successCallback(result) {
+      console.log(`Audio file is ready at URL: ${result}`);
+    }
 
-function failureCallback(error) {
-console.log(`Error generating audio file: ${error}`);
-}
+    function failureCallback(error) {
+      console.log(`Error generating audio file: ${error}`);
+    }
 
-createAudioFileAsync(audioSettings, successCallback, failureCallback);
+    createAudioFileAsync(audioSettings, successCallback, failureCallback);
 
 createAudioFileAsync() rewritten to return a promise
 
-createAudioFileAsync(audioSettings).then(successCallback, failureCallback);
+    createAudioFileAsync(audioSettings).then(successCallback, failureCallback);
 
 ### Chaining (callback hell)
 
