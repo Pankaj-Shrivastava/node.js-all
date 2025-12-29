@@ -236,9 +236,39 @@ In Node.js, we can capture rejections by adding a handler for the Node.js **unha
 
 ### Composition
 
+There are four composition tools for running asynchronous operations concurrently: Promise.all(), Promise.allSettled(), Promise.any(), and Promise.race().
+
+#### Promise.all()
+
+The **Promise.all()** static method takes an iterable of promises as input and returns a single Promise. 
+
+This returned promise fulfills when all of the input's promises fulfill (including when an empty iterable is passed), with an array of the fulfillment values. 
+
+It rejects when any of the input's promises rejects, with this first rejection reason.
+
+    const promise1 = Promise.resolve(3);
+    const promise2 = 42;
+    const promise3 = new Promise((resolve, reject) => {
+      setTimeout(resolve, 100, "foo");
+    })
+    Promise.all([promise1, promise2, promise3]).then((values) => {
+      console.log(values);
+    })
+    // Expected output: Array [3, 42, "foo"]
+
+#### Promise.allSettled()
+
+#### Promise.any()
+
+#### Promise.race()
+
+However, before you compose promises sequentially, consider if it's really necessary — it's always better to run promises concurrently so that they don't unnecessarily block each other unless one promise's execution depends on another's result.
+
 ---
 
 ### Cancellation
+
+Promise itself has no first-class protocol for cancellation, but you may be able to directly cancel the underlying asynchronous operation, typically using **AbortController**.
 
 ---
 
